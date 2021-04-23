@@ -3,11 +3,9 @@ version: '3'
 services:
 
     myredis:
-        #        container_name: myredis
         image: 'redis:alpine'
 
     mypostgres:
-        # container_name: mypostgres
         image: 'postgres:alpine'
         environment:
             POSTGRES_PASSWORD: '1qaz2wsx'
@@ -18,7 +16,6 @@ services:
             - ./pgdata:/var/lib/postgresql/data
 
     mybackend:
-        # container_name: mybackend
         restart: always
         build:
             dockerfile: Dockerfile.dev
