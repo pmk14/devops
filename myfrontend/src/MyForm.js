@@ -6,6 +6,7 @@ const MyForm = (props) => {
 
     const [flowers, setFlowers] = useState([]);
     const [name, setName] = useState("");
+    const [color, setColor] = useState("");
     const [flower, setFlower] = useState("");
     const [getId, setGetId] = useState(0);
     const [removeId, setRemoveId] = useState(0);
@@ -13,13 +14,16 @@ const MyForm = (props) => {
     const [updateLog, setUpdateLog] = useState("");
     const [updateId, setUpdateId] = useState(0);
     const [updateName, setUpdateName] = useState("");
+    const [updateColor, setUpdateColor] = useState("");
+    const [details, setDetails] = useState("");
 
     const handlePostSubmit = (event) => {
-        console.log(`Flower to save ${name}`);
+        console.log(`Flower to save ${name} ${color}`);
         event.preventDefault();
-        axios.post('http://127.0.0.1:4000/flower', 
+        axios.post('/api/flower', 
             {
                 name: name,
+                color: color,
             })
             .then(response => console.log(response))
             .catch(error => console.log(error));
@@ -27,27 +31,34 @@ const MyForm = (props) => {
 
     const handleGetSubmit = (event) => {
         console.log(`Flower id to get ${getId}`);
-        axios.get('http://127.0.0.1:4000/flower/' + getId)
+        axios.get('/api/flower/' + getId)
             .then(response => {console.log(response); setFlower(response.data);})
             .catch(error => console.log(error));
     };
 
     const handleRemoveSubmit = (event) => {
         console.log(`Flower id to remove ${removeId}`);
-        axios.delete('http://127.0.0.1:4000/flower/' + removeId)
+        axios.delete('/api/flower/' + removeId)
             .then(response => {console.log(response); setRemoveLog(response.data);})
             .catch(error => console.log(error));
     };
 
     const handleUpdateSubmit = (event) => {
-        console.log(`Flower id to update ${updateId} new name ${updateName}`);
-        axios.put('http://127.0.0.1:4000/flower', {id: updateId, name: updateName})
+        console.log(`Flower id to update ${updateId} new name ${updateName} new color ${updateColor}`);
+        axios.put('/api/flower', {id: updateId, name: updateName, color: updateColor})
             .then(response => {console.log(response); setUpdateLog(response.data);})
             .catch(error => console.log(error));
     };
 
+    function handleDetails(id) {
+        console.log(`Flower id to get ${id}`);
+        axios.get('/api/flower/' + id)
+            .then(response => {console.log(response); setDetails("Flower details: " + response.data);})
+            .catch(error => console.log(error));
+    };
+
     useEffect(() => {
-        axios.get('http://127.0.0.1:4000/flowers')
+        axios.get('/api/flowers')
             .then(response => setFlowers(response.data))
             .catch(error => console.log(error));
     }, []);
@@ -55,31 +66,41 @@ const MyForm = (props) => {
     return (
         <>
             
-            Post a flower:
-            <input type='text' value={name} onChange={event => setName(event.target.value)}/>
+            Post a flower: <br/>
+            name: <input type='text' value={name} onChange={event => setName(event.target.value)}/>
+            color: <input type='text' value={color} onChange={event => setColor(event.target.value)}/>
             <input type='submit' value='Submit' onClick={handlePostSubmit}/> <br/>
 
-            Get a flower:
-            <input type='text' value={getId} onChange={event => setGetId(event.target.value)}/>
+            <br/><br/>
+            Get a flower:<br/>
+            id: <input type='text' value={getId} onChange={event => setGetId(event.target.value)}/>
             <input type='submit' value='Submit' onClick={handleGetSubmit}/> <br/>
-            Your result:   {flower} <br/> <br/>
+            {flower} <br/>
 
-            Remove a flower:
-            <input type='text' value={removeId} onChange={event => setRemoveId(event.target.value)}/>
+            <br/><br/>
+            Remove a flower:<br/>
+            id: <input type='text' value={removeId} onChange={event => setRemoveId(event.target.value)}/>
             <input type='submit' value='Submit' onClick={handleRemoveSubmit}/> <br/>
-            Your result:   {removeLog} <br/> <br/>
+            {removeLog} <br/>
 
-            Update flower name:
-            id: <input type='text' value={updateId} onChange={event => setUpdateId(event.target.value)}/>
+            <br/><br/>
+            Update flower name:<br/>
+            id: <input type='text' value={updateId} onChange={event => setUpdateId(event.target.value)}/> <br/>
             new name: <input type='text' value={updateName} onChange={event => setUpdateName(event.target.value)}/>
+            new color: <input type='text' value={updateColor} onChange={event => setUpdateColor(event.target.value)}/>
             <input type='submit' value='Submit' onClick={handleUpdateSubmit}/> <br/>
-            Your result:   {updateLog} <br/> <br/>
+            {updateLog} <br/> <br/>
 
             <div>
                 <br/> List of {props.noFlowers} flowers <br/> 
                 {flowers
                     .slice(0, props.noFlowers)
-                    .map(flower => (<div key={flower.id}>{flower.id} {flower.name}</div>))}
+                    .map(flower => (<div key={flower.id} onClick={() => handleDetails(flower.id)}>{flower.id} {flower.name}</div>))}
+
+                    
+                <br/>
+                <br/>
+                {details} <br/>
             </div>
         </>
     );

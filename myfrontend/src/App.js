@@ -1,6 +1,5 @@
 import { useState } from 'react';
 import './App.css';
-import Post from './Post';
 import MyForm from './MyForm';
 
 function App() {
@@ -14,7 +13,7 @@ function App() {
   return (
     <div>
       <br/>
-      How many flowers you want to list? <input onChange={handleInitialValue}/> <br/>
+      How many flowers you want to list? <input onChange={handleInitialValue}/> <br/> <br/>
       <MyForm noFlowers={initialValue} changeParentHandler={setInitialValue}/>
 
     </div>

@@ -34,3 +34,18 @@ services:
             - mypostgres
             - myredis
 
+    mynginx:
+        restart: always
+        build:
+            dockerfile: Dockerfile.dev
+            context: ./mynginx
+        ports:
+            - '9090:80'
+
+    myfrontend:
+        build:
+            dockerfile: Dockerfile.dev
+            context: ./myfrontend
+        volumes:
+            - /opt/app/node_modules
+            - ./myfrontend:/opt/app
