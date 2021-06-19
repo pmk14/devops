@@ -1,0 +1,25 @@
+    apiVersion: apps/v1
+    kind: Deployment
+    metadata:
+        name: myfrontend-deployment
+        labels:
+            component: frontend
+            app: my-app
+
+    spec:
+        template: 
+            metadata:
+                name: myfrontend-pod
+                labels:
+                    component: frontend
+                    app: my-app
+            spec:
+                containers:
+                    - name: myfrontend-container
+                      image: pkochman/simplefrontend
+                      stdin: true
+        replicas: 3
+        selector:
+            matchLabels:
+                component: frontend
+                app: my-app
